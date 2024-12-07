@@ -1,10 +1,14 @@
 with open("input6.txt") as f:
     lines = f.readlines()
+
+# save the bounds of the grid
 bound_down = len(lines) - 1
 bound_right = len(lines[0]) - 2
 
 # part 1
-
+# given a starting direction and position,
+# move the guard in that direction, until he leaves the grid
+# save each position they visited to a SET
 def begin_part_one(direction, row, column):
     while (direction != "end"):
         visited.add((row,column))
@@ -17,6 +21,9 @@ def begin_part_one(direction, row, column):
         elif direction == "left":
             direction,row,column = left(row,column)
 
+# given a position and direction, move in that direction
+# or turn 90 degrees if facing a '#'
+# or end if they're going to move out of bounds
 def up(row,column):
     if row == 0:
         return "end", row, column
@@ -46,6 +53,8 @@ def left(row,column):
     else:
         return "left", row, column-1
 
+# find starting position and create set to track visited places
+# then call begin function with starting position and direction
 for i,line in enumerate(lines):
     for j,char in enumerate(line):
         if char == '^':
@@ -53,10 +62,13 @@ for i,line in enumerate(lines):
             visited = {(i,j)}
             begin_part_one("up",i,j)
 
+# sum unique places visited
 print("Part 1: {}".format(len(visited)))
 
 # part 2
-
+# given a starting direction and position,
+# move the guard in that direction and return false when he leaves the grid
+# OR return true if he is in a loop (ie he's repeating a position with the same direction)
 def begin_part_two(direction, row, column):
     while (direction != "end"):
         visited.add((row,column,direction))
@@ -72,6 +84,8 @@ def begin_part_two(direction, row, column):
             return True
     return False
 
+# sum the total number of locations for which adding a '#' creates a loop
+# use starting position from part 1
 total = 0
 for i,line in enumerate(lines):
     for j,char in enumerate(line):
